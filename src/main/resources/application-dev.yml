@@ -1,0 +1,13 @@
+spring:
+  liquibase:
+    enabled: true
+    change-log: classpath:db/master.xml
+    default-schema: ecommerce
+  datasource:
+    username: ecommerce
+    password: ecommerce
+    url: jdbc:postgresql://localhost:5432/ecommerce?currentSchema=ecommerce
+  jpa:
+    show-sql: true
+    properties:
+      hibernate.format_sql: false

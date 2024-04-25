@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: ecommerce-service
+server:
+  servlet:
+    context-path: /api/ecommerce
+  port: 8080
