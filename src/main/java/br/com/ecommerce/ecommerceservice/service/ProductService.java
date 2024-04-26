@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -52,6 +53,7 @@ public class ProductService implements BaseSpecs<Product>, Uploader {
         return saveImageFileName(s3, "bessatech", file, "products/");
     }
 
+    @Cacheable(cacheNames = "filter_products", key = "#root.method.name + ':' + #filter.type + ':' + #filter.name + ':' + #filter.description + ':' + #pageable.pageNumber + ':' + #pageable.pageSize")
     public Page<ProductDTO> filterProduct(ProductSimpleDTO filter, Pageable pageable) {
         filter = Optional.ofNullable(filter).orElseGet(ProductSimpleDTO::new);
         Specification<Product> specification = buildSpecAnd(byEquals(Product_.type, filter.getType()));
