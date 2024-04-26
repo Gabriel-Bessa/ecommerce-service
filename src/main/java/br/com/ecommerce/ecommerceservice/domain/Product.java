@@ -36,6 +36,12 @@ public class Product implements Serializable {
     @CreationTimestamp
     private LocalDateTime modificationDate;
 
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "img_url")
+    private String imgUrl;
+
     @Column(name = "description")
     private String description;
 

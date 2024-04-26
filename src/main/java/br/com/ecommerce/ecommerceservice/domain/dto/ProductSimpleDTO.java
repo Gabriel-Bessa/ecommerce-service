@@ -24,5 +24,8 @@ public class ProductSimpleDTO implements Serializable {
     @NotBlank
     @Size(max = 255)
     private String description;
-
+    @NotBlank
+    @Size(max = 255)
+    private String name;
+    private String img_url;
 }
