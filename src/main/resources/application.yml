@@ -1,7 +1,15 @@
 spring:
+  messages:
+    basename: message_erro
   application:
     name: ecommerce-service
 server:
   servlet:
     context-path: /api/ecommerce
   port: 8080
+amazon:
+  aws:
+    accesskey: <SECRET>
+    secretkey: <SECRET>
+    bucket:
+      region: us-east-1

@@ -10,6 +10,8 @@ import br.com.ecommerce.ecommerceservice.repository.ProductRepository;
 import br.com.ecommerce.ecommerceservice.repository.specs.BaseSpecs;
 import br.com.ecommerce.ecommerceservice.service.mapper.ProductMapper;
 import br.com.ecommerce.ecommerceservice.service.utils.LoadFileUtils;
+import br.com.ecommerce.ecommerceservice.service.utils.Uploader;
+import com.amazonaws.services.s3.AmazonS3;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -25,15 +27,17 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ProductService implements BaseSpecs<Product> {
+public class ProductService implements BaseSpecs<Product>, Uploader {
 
+    public static final String BUCKET_URL = "https://bessatech.s3.amazonaws.com/";
     private final ProductRepository repository;
     private final ProductMapper mapper;
     private final AsyncRedisUpdate asyncRedisUpdate;
+    private final AmazonS3 s3;
 
     @Transactional
     public void createProduct(ProductSimpleDTO product, MultipartFile file) {
-        product.setImg_url(uploadFileTo(file));
+        product.setImgUrl(uploadFileTo(file));
         Product entity = mapper.toEntity(product);
         entity.setId(UUID.randomUUID().toString());
         repository.save(entity);
@@ -45,8 +49,7 @@ public class ProductService implements BaseSpecs<Product> {
         if(!LoadFileUtils.isImage(file)) {
             throw new BusinessException("product.error", "product.upload.error");
         }
-        //TODO: Upload to S3
-        return "img_url";
+        return saveImageFileName(s3, "bessatech", file, "products/");
     }
 
     public Page<ProductDTO> filterProduct(ProductSimpleDTO filter, Pageable pageable) {

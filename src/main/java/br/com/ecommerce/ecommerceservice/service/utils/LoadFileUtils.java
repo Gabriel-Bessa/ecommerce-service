@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class LoadFileUtils {
 
     private static final List<String> imageExtension = List.of("png", "jpg", "jpeg", "gif");
-    private static final List<String> imageMimeType = List.of("png", "jpg", "jpeg", "image/gif");
+    private static final List<String> imageMimeType = List.of("image/png", "image/jpg", "image/jpeg", "image/gif");
 
     public static boolean isImage(@NotNull MultipartFile file) {
         String fileName = file.getOriginalFilename();
