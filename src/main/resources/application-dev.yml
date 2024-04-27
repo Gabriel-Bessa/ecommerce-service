@@ -7,8 +7,7 @@ spring:
     show-sql: true
     properties:
       hibernate.format_sql: false
-  data:
-    redis:
-      host: localhost
-      port: 6379
-      password: 123456
+  redis:
+    host: localhost
+    port: 6379
+    password: 123456

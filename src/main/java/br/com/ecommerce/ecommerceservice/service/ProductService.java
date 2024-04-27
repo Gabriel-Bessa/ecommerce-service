@@ -42,7 +42,6 @@ public class ProductService implements BaseSpecs<Product>, Uploader {
         Product entity = mapper.toEntity(product);
         entity.setId(UUID.randomUUID().toString());
         repository.save(entity);
-        // FIXME: Add redis and update method
         asyncRedisUpdate.updateRedisCache();
     }
 

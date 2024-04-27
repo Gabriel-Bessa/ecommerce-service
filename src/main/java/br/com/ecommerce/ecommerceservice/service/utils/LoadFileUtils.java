@@ -1,6 +1,6 @@
 package br.com.ecommerce.ecommerceservice.service.utils;
 
-import jakarta.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 

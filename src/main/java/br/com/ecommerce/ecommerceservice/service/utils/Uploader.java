@@ -27,8 +27,7 @@ public interface Uploader {
 
     default String saveImageFileName(AmazonS3 amazonS3, String bucketName, MultipartFile file, String filePath) {
         if (file.getSize() <= 0) {
-            //FIXME: Change Exception
-            throw new BusinessException("product.error", "product.upload.error");
+            throw new BusinessException("file.error", "file.invalid");
         }
         String filename = UUID.randomUUID().toString();
         try {
@@ -36,8 +35,7 @@ public interface Uploader {
             return BUCKET_URL + get(amazonS3, bucketName, filename);
         } catch (IOException | AmazonClientException e) {
             log.error("Failure Upload Image {}", e.getMessage());
-            //FIXME: Change Exception
-            throw new BusinessException("product.error", "product.upload.error");
+            throw new BusinessException("file.error", "file.invalid");
         }
     }
 
