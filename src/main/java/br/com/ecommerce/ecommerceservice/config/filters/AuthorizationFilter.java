@@ -1,6 +1,7 @@
 package br.com.ecommerce.ecommerceservice.config.filters;
 
 
+import br.com.ecommerce.ecommerceservice.config.exceptions.BusinessException;
 import br.com.ecommerce.ecommerceservice.domain.dto.UserDetailsDTO;
 import br.com.ecommerce.ecommerceservice.service.NoSqlService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -43,25 +44,28 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String requestURL = request.getRequestURL().toString();
+        boolean hasBypass = byPassRoutes.stream().anyMatch(requestURL::contains);
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String requestURL = request.getRequestURL().toString();
-            if (byPassRoutes.stream().noneMatch(it -> it.contains(requestURL))) {
-                String token = authorizationHeader.substring("Bearer ".length());
+        if (!hasBypass && (authorizationHeader == null || !authorizationHeader.startsWith("Bearer "))) {
+            returnInvalidToken(response);
+            return;
+        }
+        if (!hasBypass) {
+            String token = authorizationHeader.substring("Bearer ".length());
 
-                Object value = noSqlService.getValue(token);
-                if (value == null) {
-                    returnInvalidToken(response);
-                    return;
-                }
-                doAuthorization(value);
+            Object value = noSqlService.getValue(token);
+            if (value == null) {
+                returnInvalidToken(response);
+                return;
             }
+            doAuthorization(value);
         }
         filterChain.doFilter(request, response);
     }
 
     private void returnInvalidToken(HttpServletResponse response) throws IOException {
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setStatus(HttpStatus.FORBIDDEN.value());
         Map<String, String> error = new HashMap<>();
         error.put("property", "Falha na autenticação");
         error.put("message", "O token informado é inválido ou expirou");
