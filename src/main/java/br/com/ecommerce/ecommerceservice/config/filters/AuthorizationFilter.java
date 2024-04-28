@@ -39,19 +39,23 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class AuthorizationFilter extends OncePerRequestFilter {
 
     private final NoSqlService noSqlService;
+    private final List<String> byPassRoutes = List.of("/public", "/v1/public");
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String token = authorizationHeader.substring("Bearer ".length());
+            String requestURL = request.getRequestURL().toString();
+            if (byPassRoutes.stream().noneMatch(it -> it.contains(requestURL))) {
+                String token = authorizationHeader.substring("Bearer ".length());
 
-            Object value = noSqlService.getValue(token);
-            if (value == null) {
-                returnInvalidToken(response);
-                return;
+                Object value = noSqlService.getValue(token);
+                if (value == null) {
+                    returnInvalidToken(response);
+                    return;
+                }
+                doAuthorization(value);
             }
-            doAuthorization(value);
         }
         filterChain.doFilter(request, response);
     }

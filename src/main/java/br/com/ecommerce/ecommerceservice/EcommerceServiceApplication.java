@@ -20,7 +20,6 @@ public class EcommerceServiceApplication {
 
 }
 
-// TODO: Login and Logout
 // TODO: Proposta de compra
 // TODO: Compra
 // TODO: Admin Side
