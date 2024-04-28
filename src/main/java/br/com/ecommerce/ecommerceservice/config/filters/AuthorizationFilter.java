@@ -40,7 +40,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class AuthorizationFilter extends OncePerRequestFilter {
 
     private final NoSqlService noSqlService;
-    private final List<String> byPassRoutes = List.of("/public", "/v1/public");
+    private final List<String> byPassRoutes = List.of("/public", "/v1/public", "/actuator", "/login");
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

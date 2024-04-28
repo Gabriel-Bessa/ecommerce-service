@@ -23,7 +23,7 @@ public class Role implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private Long id;
+    private String id;
 
     @Column(name = "key")
     private String key;

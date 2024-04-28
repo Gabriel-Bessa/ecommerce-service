@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="20240428140500-01" author="gabriel-bessa">
+        <createTable tableName="tb_purchases">
+            <column name="id" type="varchar(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="creation_date" type="datetime"
+                    defaultValueDate="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modification_date" type="datetime"
+                    defaultValueDate="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="varchar(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20240428140500-02" author="gabriel-bessa">
+        <createTable tableName="tb_purchase_products">
+            <column name="id" type="varchar(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="creation_date" type="datetime"
+                    defaultValueDate="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modification_date" type="datetime"
+                    defaultValueDate="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="purchase_id" type="varchar(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="varchar(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20240428140500-03" author="gabriel-bessa">
+        <createTable tableName="tb_coverage_analysis">
+            <column name="id" type="varchar(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="creation_date" type="datetime"
+                    defaultValueDate="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modification_date" type="datetime"
+                    defaultValueDate="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="purchase_id" type="varchar(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="varchar(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(36)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet id="20240428140500-04" author="gabriel-bessa">
+        <addForeignKeyConstraint baseTableName="tb_coverage_analysis" baseColumnNames="product_id" constraintName="fk_coverage_analysis_product" referencedTableName="tb_products"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="tb_coverage_analysis" baseColumnNames="purchase_id" constraintName="fk_coverage_analysis_purchases" referencedTableName="tb_purchases"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="tb_purchase_products" baseColumnNames="product_id" constraintName="fk_purchase_products_product" referencedTableName="tb_products"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="tb_purchase_products" baseColumnNames="purchase_id" constraintName="fk_purchase_products_purchases" referencedTableName="tb_purchases"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="tb_purchases" baseColumnNames="user_id" constraintName="fk_purchase_user" referencedTableName="tb_users"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

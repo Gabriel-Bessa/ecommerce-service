@@ -72,7 +72,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         obj.put("id", user.getId());
         obj.put("email", user.getUsername());
         obj.put("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
-        noSqlService.setValue(accessToken, new ObjectMapper().writeValueAsString(obj), TimeUnit.DAYS, 7L);
+        noSqlService.setValue(accessToken, new ObjectMapper().writeValueAsString(obj), TimeUnit.HOURS, 6L);
     }
 
     @Override

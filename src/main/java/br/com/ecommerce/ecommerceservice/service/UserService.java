@@ -28,7 +28,11 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = repository.findByEmail(username).orElseThrow(() -> new BusinessException("user.error", "user.not.found"));
-        return mapper.toDto(user);
+        return mapper.toDetailsDto(user);
+    }
+
+    public User findByEmail(String email) {
+        return repository.findByEmail(email).orElseThrow(() -> new BusinessException("user.error", "user.not.found"));
     }
 
     @Transactional
