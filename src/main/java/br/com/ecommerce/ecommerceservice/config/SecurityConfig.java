@@ -1,8 +1,9 @@
 package br.com.ecommerce.ecommerceservice.config;
 
 import br.com.ecommerce.ecommerceservice.config.filters.AuthenticationFilter;
-import br.com.ecommerce.ecommerceservice.config.filters.AuthorizationHandler;
+import br.com.ecommerce.ecommerceservice.config.filters.AuthorizationFilter;
 import br.com.ecommerce.ecommerceservice.config.handlers.AccessDeniedHandler;
+import br.com.ecommerce.ecommerceservice.service.NoSqlService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +15,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.access.intercept.AuthorizationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -24,8 +26,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final AccessDeniedHandler accessDeniedHandler;
+    private final NoSqlService noSqlService;
     private final PropertiesConfig propertiesConfig;
     private final BCryptPasswordEncoder encoder;
+    private final AuthorizationFilter authorizationFilter;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -37,8 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.httpBasic().disable();
         http.csrf().disable().authorizeHttpRequests().anyRequest().permitAll();
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler);
-        http.addFilter(new AuthenticationFilter(authenticationManagerBean(), propertiesConfig));
-        http.addFilterBefore(new AuthorizationHandler(), AuthorizationFilter.class);
+        http.addFilter(new AuthenticationFilter(authenticationManagerBean(), noSqlService, propertiesConfig));
+        http.addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean

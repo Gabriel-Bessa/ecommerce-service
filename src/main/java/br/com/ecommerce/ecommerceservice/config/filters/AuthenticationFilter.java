@@ -3,13 +3,16 @@ package br.com.ecommerce.ecommerceservice.config.filters;
 import br.com.ecommerce.ecommerceservice.config.PropertiesConfig;
 import br.com.ecommerce.ecommerceservice.config.exceptions.BusinessException;
 import br.com.ecommerce.ecommerceservice.domain.dto.UserDetailsDTO;
+import br.com.ecommerce.ecommerceservice.service.NoSqlService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +32,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
+    private final NoSqlService noSqlService;
     private final PropertiesConfig config;
 
     @Override
@@ -62,13 +66,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
     }
 
-    private void setInRedis(String accessToken, UserDetailsDTO user) {
+    private void setInRedis(String accessToken, UserDetailsDTO user) throws JsonProcessingException {
         log.info("Setting token: {} in REDIS", accessToken);
         Map<String, Object> obj = new HashMap<>();
         obj.put("id", user.getId());
         obj.put("email", user.getUsername());
         obj.put("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
-        // TODO: Set in redis
+        noSqlService.setValue(accessToken, new ObjectMapper().writeValueAsString(obj), TimeUnit.DAYS, 7L);
     }
 
     @Override

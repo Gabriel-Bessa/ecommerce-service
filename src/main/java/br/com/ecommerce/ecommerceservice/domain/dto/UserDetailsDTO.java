@@ -2,21 +2,26 @@ package br.com.ecommerce.ecommerceservice.domain.dto;
 
 
 import java.util.Collection;
+import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserDetailsDTO implements UserDetails {
 
     private String id;
     private String username;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
