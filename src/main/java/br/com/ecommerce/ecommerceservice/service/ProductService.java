@@ -70,7 +70,7 @@ public class ProductService implements BaseSpecs<Product>, Uploader {
         return saveImageFileName(s3, "bessatech", file, "products/");
     }
 
-    @Cacheable(cacheNames = "filter_products", key = "#root.method.name + ':' + #filter.type + ':' + #filter.name + ':' + #filter.description + #filter.cep + ':' + #pageable.pageNumber + ':' + #pageable.pageSize")
+    @Cacheable(cacheNames = "filter_products", key = "#root.method.name + ':' + #filter.type + ':' + #filter.name + ':' + #filter.description + ':' + #filter.cep + ':' + #pageable.pageNumber + ':' + #pageable.pageSize")
     public Page<ProductDTO> filterProduct(ProductSimpleDTO filter, Pageable pageable) {
         filter = Optional.ofNullable(filter).orElseGet(ProductSimpleDTO::new);
         if (ProductType.SERVICE_COMBO.equals(filter.getType()) && StringUtils.isBlank(filter.getCep())) {
