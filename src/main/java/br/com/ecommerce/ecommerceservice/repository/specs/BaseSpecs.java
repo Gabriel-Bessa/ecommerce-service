@@ -1,8 +1,13 @@
 package br.com.ecommerce.ecommerceservice.repository.specs;
 
+import br.com.ecommerce.ecommerceservice.domain.Product;
+import br.com.ecommerce.ecommerceservice.domain.ProductCoverage;
+import br.com.ecommerce.ecommerceservice.domain.Product_;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Predicate;
+import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SetAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import org.apache.commons.lang3.BooleanUtils;
@@ -151,6 +156,19 @@ public interface BaseSpecs<T> {
     }
 
     @NonNull
+    default <A, N> Specification<T> byCep(ListAttribute<T, A> attributeJoin, SingularAttribute<A, N> attribute, N data) {
+        return (root, query, cb) -> {
+            Join<T, A> join = root.join(attributeJoin);
+            if ((data instanceof Boolean && BooleanUtils.isTrue((Boolean) data))
+                    || (data instanceof String && StringUtils.isNotEmpty((String) data))
+                    || (data != null)) {
+                return cb.equal(join.get(attribute), StringUtils.replace((String) data,  "-", ""));
+            }
+            return cb.and();
+        };
+    }
+
+    @NonNull
     default <A, N> Specification<T> byNotEqualsJoinSpec(SingularAttribute<T, A> attributeJoin, SingularAttribute<A, N> attribute, N data) {
         return (root, query, cb) -> {
             Join<T, A> join = root.join(attributeJoin);
@@ -162,6 +180,7 @@ public interface BaseSpecs<T> {
             return cb.and();
         };
     }
+
 
     @NonNull
     default <A, N> Specification<T> byEqualsJoinSpecIn(SingularAttribute<T, A> attributeJoin, SingularAttribute<A, N> attribute, Set<N> data) {

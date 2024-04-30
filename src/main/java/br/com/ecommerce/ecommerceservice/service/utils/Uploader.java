@@ -26,10 +26,10 @@ public interface Uploader {
     }
 
     default String saveImageFileName(AmazonS3 amazonS3, String bucketName, MultipartFile file, String filePath) {
-        if (file.getSize() <= 0) {
+        if (file == null || file.getSize() <= 0) {
             throw new BusinessException("file.error", "file.invalid");
         }
-        String filename = UUID.randomUUID().toString();
+        String filename = filePath + UUID.randomUUID() + "." + LoadFileUtils.getFileExtension(file.getOriginalFilename());
         try {
             uploadFile(amazonS3, bucketName, file.getSize(), filename, file.getInputStream());
             return BUCKET_URL + get(amazonS3, bucketName, filename);

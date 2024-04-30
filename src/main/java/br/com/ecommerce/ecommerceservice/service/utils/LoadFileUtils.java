@@ -18,7 +18,7 @@ public class LoadFileUtils {
         return imageExtension.contains(fileExtension) && imageMimeType.contains(file.getContentType());
     }
 
-    private static String getFileExtension(String fileName) {
+    public static String getFileExtension(String fileName) {
         int dotIndex = fileName.lastIndexOf('.');
         if (dotIndex == -1 || dotIndex == fileName.length() - 1) {
             return null;

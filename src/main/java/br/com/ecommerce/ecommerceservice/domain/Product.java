@@ -1,6 +1,8 @@
 package br.com.ecommerce.ecommerceservice.domain;
 
 import br.com.ecommerce.ecommerceservice.domain.enuns.ProductType;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,6 +12,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -54,4 +57,7 @@ public class Product implements Serializable {
 
     @Column(name = "needs_confirmation")
     private Boolean needsConfirmation;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductCoverage> productCoverage;
 }
