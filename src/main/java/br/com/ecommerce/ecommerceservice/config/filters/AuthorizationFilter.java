@@ -88,7 +88,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> map = mapper.readValue((String) objFromRedis, Map.class);
         List<SimpleGrantedAuthority> roles = ((List<String>) map.get("roles")).stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-        return new UserDetailsDTO((String) map.get("id"), (String) map.get("email"), null, roles);
+        return new UserDetailsDTO((String) map.get("id"), (String) map.get("email"), (String) map.get("cpf"), null, roles);
     }
 
     private Authentication getAuthenticationFromRedisMap(UserDetailsDTO dto) {

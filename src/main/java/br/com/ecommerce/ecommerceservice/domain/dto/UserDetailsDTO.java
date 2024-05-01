@@ -1,24 +1,29 @@
 package br.com.ecommerce.ecommerceservice.domain.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDetailsDTO implements UserDetails {
+public class UserDetailsDTO implements UserDetails, Serializable {
+    @Serial
+    private static final long serialVersionUID = 13247841348L;
 
     private String id;
     private String username;
+    private String email;
+    @JsonIgnore
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 

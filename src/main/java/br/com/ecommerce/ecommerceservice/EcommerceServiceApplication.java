@@ -16,7 +16,6 @@ public class EcommerceServiceApplication {
 
 }
 
-// TODO: Adição de campos ao usuário e proposta de compra
 // TODO: Documentação e JUnit
 // TODO: Admin Side
 // TODO: Dashboard

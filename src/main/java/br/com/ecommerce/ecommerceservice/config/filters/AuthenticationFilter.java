@@ -37,12 +37,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        String email = request.getParameter("email");
+        String cpf = request.getParameter("cpf");
         String password = request.getParameter("password");
-        if (email == null || password == null) {
+        if (cpf == null || password == null) {
+            // FIXME: Alterar messagem
             throw new BusinessException("product.error", "product.upload.error");
         }
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(cpf, password);
         return authenticationManager.authenticate(authenticationToken);
     }
 
@@ -53,7 +54,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         UserDetailsDTO user = (UserDetailsDTO) authentication.getPrincipal();
         Algorithm algorithm = Algorithm.HMAC256(config.getSecret().getBytes());
         String accessToken = JWT.create()
-                .withSubject(user.getUsername())
+                .withSubject(user.getEmail())
                 .withExpiresAt(expiration)
                 .withIssuer(request.getRequestURL().toString())
                 .sign(algorithm);
@@ -70,7 +71,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         log.info("Setting token: {} in REDIS", accessToken);
         Map<String, Object> obj = new HashMap<>();
         obj.put("id", user.getId());
-        obj.put("email", user.getUsername());
+        obj.put("email", user.getEmail());
+        obj.put("cpf", user.getUsername());
         obj.put("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
         noSqlService.setValue(accessToken, new ObjectMapper().writeValueAsString(obj), TimeUnit.HOURS, 6L);
     }

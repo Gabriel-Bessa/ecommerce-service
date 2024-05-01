@@ -1,8 +1,10 @@
 package br.com.ecommerce.ecommerceservice.service;
 
+import br.com.ecommerce.ecommerceservice.config.SecurityUtils;
 import br.com.ecommerce.ecommerceservice.config.exceptions.BusinessException;
 import br.com.ecommerce.ecommerceservice.domain.User;
 import br.com.ecommerce.ecommerceservice.domain.dto.UserDTO;
+import br.com.ecommerce.ecommerceservice.domain.dto.UserDetailsDTO;
 import br.com.ecommerce.ecommerceservice.repository.UserRepository;
 import br.com.ecommerce.ecommerceservice.service.mapper.UserMapper;
 import java.util.UUID;
@@ -27,12 +29,16 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = repository.findByEmail(username).orElseThrow(() -> new BusinessException("user.error", "user.not.found"));
+        User user = repository.findByCpf(username).orElseThrow(() -> new BusinessException("user.error", "user.not.found"));
         return mapper.toDetailsDto(user);
     }
 
     public User findByEmail(String email) {
         return repository.findByEmail(email).orElseThrow(() -> new BusinessException("user.error", "user.not.found"));
+    }
+
+    public UserDetailsDTO me() {
+        return SecurityUtils.getAuthUser();
     }
 
     @Transactional
