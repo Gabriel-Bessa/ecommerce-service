@@ -9,5 +9,6 @@
     <include file="db/changelog/20240427181600_add_tb_users.xml"/>
     <include file="db/changelog/20240428140500_add_purchase_tables.xml"/>
     <include file="db/changelog/20240430130900_add_product_coverage.xml"/>
+    <include file="db/changelog/20240501142100_add_users_columns.xml"/>
 
 </databaseChangeLog>

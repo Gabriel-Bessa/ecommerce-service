@@ -1,5 +1,6 @@
 package br.com.ecommerce.ecommerceservice.domain;
 
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -31,6 +32,33 @@ public class User implements Serializable, UserDetails {
 
     @Column(name = "name")
     private String name;
+
+    @Column(name = "cpf")
+    private String cpf;
+
+    @Column(name = "birth_date")
+    private LocalDateTime birthDate;
+
+    @Column(name = "cep")
+    private String cep;
+
+    @Column(name = "street")
+    private String street;
+
+    @Column(name = "neighborhood")
+    private String neighborhood;
+
+    @Column(name = "number")
+    private String number;
+
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "uf")
+    private String uf;
+
+    @Column(name = "complement")
+    private String complement;
 
     @Column(name = "email")
     private String email;

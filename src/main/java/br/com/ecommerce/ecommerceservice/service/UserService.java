@@ -41,6 +41,9 @@ public class UserService implements UserDetailsService {
         if (repository.existsByEmail(entity.getEmail())) {
             throw new BusinessException("user.error", "user.email.already.exists");
         }
+        if (repository.existsByCpf(entity.getCpf())) {
+            throw new BusinessException("user.error", "user.cpf.already.exists");
+        }
         entity.setId(UUID.randomUUID().toString());
         entity.setPassword(encoder.encode(dto.getPassword()));
         repository.save(entity);
