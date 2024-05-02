@@ -8,6 +8,7 @@ import br.com.ecommerce.ecommerceservice.domain.PurchaseProduct;
 import br.com.ecommerce.ecommerceservice.domain.dto.CheckoutDTO;
 import br.com.ecommerce.ecommerceservice.domain.dto.CheckoutProductDTO;
 import br.com.ecommerce.ecommerceservice.domain.enuns.CoverageAnalysisStatus;
+import br.com.ecommerce.ecommerceservice.domain.enuns.ProductType;
 import br.com.ecommerce.ecommerceservice.domain.enuns.PurchaseStatus;
 import br.com.ecommerce.ecommerceservice.repository.ProductRepository;
 import br.com.ecommerce.ecommerceservice.repository.PurchaseRepository;
@@ -48,7 +49,7 @@ public class CheckoutService {
         purchase.setStatus(PurchaseStatus.FINALIZED);
         products.forEach(product -> {
             CheckoutProductDTO checkoutProduct = checkout.getProducts().stream().filter(it -> it.getId().equals(product.getId())).findFirst().orElse(new CheckoutProductDTO());
-            if (product.getNeedsConfirmation()) {
+            if (ProductType.SERVICE_COMBO.equals(product.getType())) {
                 purchase.setStatus(PurchaseStatus.PENDING);
                 CoverageAnalysis coverageAnalysis = bindCoverageAnalysis(product, checkoutProduct, purchase);
                 purchase.getCoverageAnalyses().add(coverageAnalysis);

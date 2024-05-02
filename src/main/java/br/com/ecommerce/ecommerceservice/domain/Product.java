@@ -55,9 +55,6 @@ public class Product implements Serializable {
     @Enumerated(EnumType.STRING)
     private ProductType type;
 
-    @Column(name = "needs_confirmation")
-    private Boolean needsConfirmation;
-
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductCoverage> productCoverage;
 }

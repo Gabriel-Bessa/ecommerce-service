@@ -19,8 +19,6 @@ public class ProductSimpleDTO implements Serializable {
     private ProductType type;
     private String cep;
     @NotNull
-    private Boolean needsConfirmation;
-    @NotNull
     @Range(min = 1, max = 1000000)
     private BigDecimal value;
     @NotBlank

@@ -33,9 +33,6 @@
             <column name="type" type="varchar(20)">
                 <constraints nullable="false"/>
             </column>
-            <column name="needs_confirmation" type="bool" defaultValue="false">
-                <constraints nullable="false"/>
-            </column>
         </createTable>
     </changeSet>
 

@@ -5,6 +5,7 @@ import br.com.ecommerce.ecommerceservice.config.exceptions.BusinessException;
 import br.com.ecommerce.ecommerceservice.domain.User;
 import br.com.ecommerce.ecommerceservice.domain.dto.UserDTO;
 import br.com.ecommerce.ecommerceservice.domain.dto.UserDetailsDTO;
+import br.com.ecommerce.ecommerceservice.repository.RoleRepository;
 import br.com.ecommerce.ecommerceservice.repository.UserRepository;
 import br.com.ecommerce.ecommerceservice.service.mapper.UserMapper;
 import java.util.UUID;
@@ -26,6 +27,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository repository;
     private final UserMapper mapper;
     private final PasswordEncoder encoder;
+    private final RoleRepository roleRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -52,6 +54,11 @@ public class UserService implements UserDetailsService {
         }
         entity.setId(UUID.randomUUID().toString());
         entity.setPassword(encoder.encode(dto.getPassword()));
+        setUserRoles(entity);
         repository.save(entity);
+    }
+
+    private void setUserRoles(User entity) {
+        entity.setRoles(roleRepository.findByKey("ROLE_USER"));
     }
 }
